@@ -3,6 +3,14 @@
         {
             "src": "src/main.py",
             "use": "@vercel/python"
+        },
+        {
+            "src": "src/gdelt.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "src/LLM.py",
+            "use": "@vercel/python"
         }
     ],
     "routes": [
