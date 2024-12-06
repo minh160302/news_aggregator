@@ -1,17 +1,22 @@
 # import asyncio
+import os
 import gdelt
 import LLM
+import redis.asyncio as redis
 from typing import Union
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import redis.asyncio as redis
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 redis_client = redis.Redis(
     host='bursting-marlin-38619.upstash.io',
     port=6379,
-    password='AZbbAAIjcDFlOTU1MDViZmM2NmY0YjhjYWExYjlkMjE4NzBmNGI3MHAxMA',
+    password=os.environ.get("UPSTASH_REDIS_API_KEY"),
     ssl=True,
 )
 
@@ -107,7 +112,6 @@ async def summarize_article_url(body: ArticleUrlBody):
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Redis read error: {str(e)}")
-
 
 
 if __name__ == "__main__":
