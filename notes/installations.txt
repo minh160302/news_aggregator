@@ -1,0 +1,8 @@
+newspaper3k
+    - https://newspaper.readthedocs.io/en/stable/user_guide/install.html
+
+
+    $ brew install libxml2 libxslt
+    $ brew install libtiff libjpeg webp little-cms2
+    $ pip3 install newspaper
+    $ pip3 install lxml_html_clean

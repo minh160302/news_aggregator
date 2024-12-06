@@ -1,0 +1,5 @@
+gdeltdoc
+python-dotenv
+groq==0.13.0
+fastapi[standard]
+redis>=4.2.0rc1
