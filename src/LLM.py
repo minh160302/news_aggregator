@@ -18,7 +18,7 @@ async def send_article_then_summarize(article: str) -> str:
         messages=[
             {
                 "role": "user",
-                "content": f"Summarize this article: '{article}'",
+                "content": f"Summarize this article in at most 3 sentences: '{article}'",
             }
         ],
         model="llama3-8b-8192",

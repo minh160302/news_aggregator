@@ -1,24 +1,14 @@
 # import asyncio
-import os
 import gdelt
+import trends
 import LLM
-import redis.asyncio as redis
+from redis_client import redis_client
+
 from typing import Union
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from dotenv import load_dotenv
-
-
-load_dotenv()
-
-
-redis_client = redis.Redis(
-    host='bursting-marlin-38619.upstash.io',
-    port=6379,
-    password=os.environ.get("UPSTASH_REDIS_API_KEY"),
-    ssl=True,
-)
+from urllib.parse import unquote
 
 
 app = FastAPI()
@@ -55,8 +45,10 @@ Scrawl Google trending to pre-fetch some keywords
 """
 
 
+# * Search articles from trusted source by keywords
 @app.post("/search/{keyword}")
 def search_articles_by_keyword(keyword: str):
+    keyword = unquote(keyword)
     # Trusted news sources
     sources = [
         "bbc.com",
@@ -95,10 +87,8 @@ class ArticleUrlBody(BaseModel):
 
 @app.post("/summarize")
 async def summarize_article_url(body: ArticleUrlBody):
-    # r.set('foo', 'bar')
-    # print(r.get('foo'))
     """
-    Read a value from Redis by its key.
+    Summarize an article with Llama
     """
     url = body.url
     try:
@@ -112,6 +102,21 @@ async def summarize_article_url(body: ArticleUrlBody):
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Redis read error: {str(e)}")
+
+
+@app.get("/trends")
+async def get_trending_keywords():
+    """
+    Get trending keywords
+    """
+    trends_df = trends.get_trending_keywords()
+    data = []
+    for row in trends_df.itertuples():
+        data.append({
+            'keyword': row.title,
+            'geolocation': row.geolocation
+        })
+    return {'data': data}
 
 
 if __name__ == "__main__":

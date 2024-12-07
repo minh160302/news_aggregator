@@ -27,5 +27,5 @@ def search_gdelt_by_keyword(keyword: str) -> DataFrame:
 
 def filter_by_trusted_sources(articles: DataFrame, sources: List[int]) -> DataFrame:
     trusted_sources = set(sources)
-    trusted = articles[articles['domain'].isin(trusted_sources)]
+    trusted = DataFrame() if articles.empty else articles[articles['domain'].isin(trusted_sources)]
     return trusted
