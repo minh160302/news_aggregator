@@ -9,6 +9,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from urllib.parse import unquote
+from mangum import Mangum
+import logging
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 app = FastAPI()
@@ -30,6 +36,7 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
+    logger.info("Root endpoint accessed")
     return {"Hello": "World"}
 
 
@@ -119,6 +126,8 @@ async def get_trending_keywords():
     return {'data': data}
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=80)
+lambda_handler = Mangum(app)
+
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=8080)

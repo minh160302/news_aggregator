@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: FastAPI application with multiple imports deployed with AWS SAM
+
+Globals:
+  Function:
+    Timeout: 10  # Adjust as needed
+    Runtime: python3.9  # Ensure compatibility with your Python version
+
+Resources:
+  FastApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: main.lambda_handler
+      CodeUri: ./src
+      Runtime: python3.9
+      MemorySize: 128  # Adjust memory as required
+      Timeout: 10  # Adjust as required
+      Environment:
+        Variables:
+
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+        NonRoot:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+
+Outputs:
+  ApiUrl:
+    Description: URL of the API Gateway
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+
+  FastApiFunction:
+    Description: "Mangum Handler Function ARN"
+    Value: !GetAtt FastApiFunction.Arn

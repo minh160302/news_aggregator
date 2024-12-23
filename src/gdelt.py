@@ -12,7 +12,7 @@ def search_gdelt_by_keyword(keyword: str) -> DataFrame:
         # start_date = "2020-05-10",
         # end_date = "2020-05-11",
         country=country,
-        timespan=timespan,
+        timespan=timespan
     )
 
     gd = GdeltDoc()
