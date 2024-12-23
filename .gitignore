@@ -5,3 +5,4 @@ __pycache__
 notebooks
 
 .aws-sam
+template.yaml
